@@ -4,11 +4,10 @@ import { useEffect } from "react";
 import { useCurrent } from "../features/auth/api/use-current";
 export default function Home() {
   const router = useRouter();
-  router.push("/signin");
   const {data,isLoading} = useCurrent();
   
   useEffect(()=>{
-    if(data && !isLoading){
+    if(!data && !isLoading){
       router.push("/signin")
     }
   },[data])
