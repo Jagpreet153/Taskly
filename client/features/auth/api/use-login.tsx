@@ -11,9 +11,9 @@ export const useLogin= () => {
         Error,
         RequestType>
         ({
-            mutationFn: async({json}) =>{
+            mutationFn: async({ json }): Promise<ResponseType> => {
                 const response = await client.api.auth.login["$post"]({ json });
-                return await response.json();
+                return await response.json() 
             },
 
         })
