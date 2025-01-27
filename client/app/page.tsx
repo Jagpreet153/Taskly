@@ -1,20 +1,15 @@
-"use client"
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useCurrent } from "../features/auth/api/use-current";
-export default function Home() {
-  const router = useRouter();
-  const {data,isLoading} = useCurrent();
-  
-  useEffect(()=>{
-    if(!data && !isLoading){
-      router.push("/signin")
-    }
-  },[data])
+import { getCurrent } from "@/features/auth/actions";
+import { UserButton } from "@/features/auth/components/user-button";
+import { redirect } from "next/navigation";
+export default async function Home() {
 
+  const user =await getCurrent();
+  console.log(user)
+  if(!user)
+    redirect("/signin");
   return (
     <div className="">
-          Only authenticated users can access this page 
+         <UserButton/>
     </div>
   );
 }

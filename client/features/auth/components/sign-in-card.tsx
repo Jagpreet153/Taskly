@@ -15,7 +15,7 @@ import { useLogin } from "../api/use-login";
 
 export const SigninCard = () => {
 
-    const {mutate} =useLogin()
+    const {mutate,isPending} =useLogin()
 
     const form=useForm<z.infer<typeof loginSchema>>({
            resolver:zodResolver(loginSchema),
@@ -51,7 +51,6 @@ return(
                                     {...field}
                                     type="email"
                                     placeholder="Enter Email address"
-                                    disabled={false}
                                     />
                                 </FormControl>
                                 <FormMessage {...field}/>
@@ -69,7 +68,7 @@ return(
                                     {...field}
                                     type="password"
                                     placeholder="Enter password"
-                                    disabled={false}
+                                    disabled={isPending}
                                     />
                                 </FormControl>
                                 <FormMessage {...field}/>
@@ -82,11 +81,11 @@ return(
                         </div>
 
                         <CardContent className="flex flex-col p-[-4rem] gap-2">
-                            <Button className="w-full" size="lg" variant="secondary" disabled={false} >
+                            <Button className="w-full" size="lg" variant="secondary" disabled={isPending} >
                                 <FaGithub className="mr-2 size-5"/>
                                 Continue with Github
                             </Button> 
-                            <Button className="w-full" size="lg" variant="secondary" disabled={false} >
+                            <Button className="w-full" size="lg" variant="secondary" disabled={isPending} >
                                 <FcGoogle className="mr-2 size-5"/>
                                 Continue with Google
                             </Button>   

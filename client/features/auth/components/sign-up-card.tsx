@@ -19,7 +19,7 @@ const formSchema = z.object({
     password: z.string().min(1,"required").max(256)
 });
 export const SignupCard = () => {
-    const {mutate} =useRegister()
+    const {mutate,isPending} =useRegister()
     const form=useForm<z.infer<typeof formSchema>>({
         resolver:zodResolver(formSchema),
         defaultValues:{
@@ -61,7 +61,7 @@ return(
                                     {...field}
                                     type="email"
                                     placeholder="Enter Email address"
-                                    disabled={false}
+                                    disabled={isPending}
                                     />
                                 </FormControl>
                                 <FormMessage {...field}/>
@@ -80,7 +80,7 @@ return(
                                     {...field}
                                     type="text"
                                     placeholder="Enter your name"
-                                    disabled={false}
+                                    disabled={isPending}
                                     />
                                 </FormControl>
                                 <FormMessage {...field}/>
@@ -98,7 +98,7 @@ return(
                                     {...field}
                                     type="password"
                                     placeholder="Enter password"
-                                    disabled={false}
+                                    disabled={isPending}
                                     />
                                 </FormControl>
                                 <FormMessage {...field}/>

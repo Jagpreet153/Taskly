@@ -71,10 +71,9 @@ const app = new Hono()
         }   
     )
 
-    .post("/logout",(c)=>{
-        deleteCookie(c, sessionMiddleware , AUTH_COOKIE)
-            const {account} = c;
-            return c.json({success:true})
+    .post("/logout", (c) => {
+        deleteCookie(c, AUTH_COOKIE);
+        return c.json({success: true});
     })
 
 export default app;
