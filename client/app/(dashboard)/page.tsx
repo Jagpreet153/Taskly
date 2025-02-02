@@ -1,5 +1,5 @@
 import { getCurrent } from "@/features/auth/actions";
-import { UserButton } from "@/features/auth/components/user-button";
+import { CreateWorkspacesForm } from "@/features/workspaces/components/createWorkspacesForm";
 import { redirect } from "next/navigation";
 export default async function Home() {
 
@@ -8,8 +8,8 @@ export default async function Home() {
   if(!user)
     redirect("/signin");
   return (
-    <div className="">
-         <UserButton/>
+    <div className="bg-neutral-500 p-4 h-full">
+         <CreateWorkspacesForm/>
     </div>
   );
 }
