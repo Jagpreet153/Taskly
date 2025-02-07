@@ -9,9 +9,10 @@ export const WorkspaceSwitcher = () => {
     const { data : workspaces} = useGetWorkspaces();   
     return (
         <div className="flex flex-col gap-y-2">
-          <div className="flex items-center justify-center">
-            <p className="text-xs uppercase text-neutral-500">Switch Workspace</p>
+          <div className="flex items-center justify-between">
+            <p className="text-xs uppercase text-neutral-500">Workspace</p>
             <RiAddCircleFill className="w-5 h-5 text-neutral-500 cursor-pointer hover:opacity-75 transition"/>
+          </div>
             <Select>
                 <SelectTrigger className="w-full bg-neutral-200 font-medium p-1">
                     <SelectValue placeholder="No Workspace Selected">
@@ -31,7 +32,7 @@ export const WorkspaceSwitcher = () => {
                     }
                 </SelectContent>
             </Select>
-          </div>
+          
         </div>
     );
 }
