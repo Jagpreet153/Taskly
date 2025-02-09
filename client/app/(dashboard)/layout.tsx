@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sidebar } from '@/components/sidebar';
 import { Navbar } from '@/components/navbar';
+import { CreateWorkspaceModal } from '@/features/workspaces/components/createWorkspaceModal';
 interface DashboardLayoutProps {
     children: React.ReactNode;
 }
@@ -9,6 +10,7 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     return(
         <div className='min-h-screen'>
+            <CreateWorkspaceModal/>
             <div className='flex w-full h-full'>
                 <div className='fixed left-0 top-0 hidden lg:block lg:w-[264px] h-full overflow-y-auto '>
                     <Sidebar/>
