@@ -14,5 +14,5 @@ export const useCreateWorkspaceModal = () => {
         open,
         close,
         setIsOpen
-    }
-}
+    };
+};

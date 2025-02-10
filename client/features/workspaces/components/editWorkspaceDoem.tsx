@@ -1,7 +1,7 @@
 "use client"
 import { z } from 'zod';
 import { useRef } from 'react';
-import { createWorkspaceSchema } from '../schemas';
+import { updateWorkspaceSchema } from '../schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,32 +14,36 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Image from "next/image";
 import { ImageIcon, Upload } from "lucide-react";
 import React from 'react';
+import {Workspace} from '../types';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-interface CreateWorkspacesFormProps {
+interface EditWorkspacesFormProps {
     onCancel?: () => void;
+    initialValues: Workspace
 }
 
-export const CreateWorkspacesForm = ({ onCancel }: CreateWorkspacesFormProps) => {
+export const EditWorkspacesForm = ({ onCancel,initialValues }: EditWorkspacesFormProps) => {
     const router=useRouter();
     const { mutate, isPending } = useCreateWorkspaces();
 
     const inputRef = React.useRef<HTMLInputElement | null>(null);
 
-    const form = useForm<z.infer<typeof createWorkspaceSchema>>({
-        resolver: zodResolver(createWorkspaceSchema),
+    const form = useForm<z.infer<typeof updateWorkspaceSchema>>({
+        resolver: zodResolver(updateWorkspaceSchema),
         defaultValues: {
-            name: "",
-            image: undefined
+            ...initialValues,
+            image: initialValues.imageUrl? initialValues.imageUrl : ""
         }
     });
 
-    const onSubmit = (values: z.infer<typeof createWorkspaceSchema>) => {
+    const onSubmit = (values: z.infer<typeof updateWorkspaceSchema>) => {
         const finalValue={
             ...values,
             image: values.image instanceof File ?  values.image : undefined
         }
-        mutate({ form: finalValue },{
+        mutate({ form: finalValue,
+            param: {workspaceId: initialValues.$id} 
+         },{
             onSuccess: ( {data} ) => {
                 form.reset();
                 // onCancel?.();
@@ -61,7 +65,7 @@ export const CreateWorkspacesForm = ({ onCancel }: CreateWorkspacesFormProps) =>
         <Card className="w-full max-w-3xl mx-auto bg-white md:my-6 shadow-sm">
             <CardHeader className="space-y-1.5 p-4 sm:p-6 md:p-8">
                 <CardTitle className="text-xl sm:text-2xl font-semibold">
-                    Create Workspace
+                    {initialValues.name}
                 </CardTitle>
             </CardHeader>
             

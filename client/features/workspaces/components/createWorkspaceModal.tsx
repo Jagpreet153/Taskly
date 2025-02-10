@@ -7,10 +7,10 @@ import {useState} from "react";
 
 export const CreateWorkspaceModal = () => { 
     const [open, setOpen] = useState(true);
-    const {isopen,setIsOpen} = useCreateWorkspaceModal();
+    const {isopen,setIsOpen,close} = useCreateWorkspaceModal();
     return (
         <ResponsiveModal open={isopen} onOpenChange={setIsOpen}>
-            <CreateWorkspacesForm />
+            <CreateWorkspacesForm onCancel={close}/>
         </ResponsiveModal>
     );
 }
