@@ -42,7 +42,6 @@ export const CreateWorkspacesForm = ({ onCancel }: CreateWorkspacesFormProps) =>
         mutate({ form: finalValue },{
             onSuccess: ( {data} ) => {
                 form.reset();
-                // onCancel?.();
                 router.push(`/workspace/${data.$id}`);
             }
         }
@@ -132,16 +131,36 @@ export const CreateWorkspacesForm = ({ onCancel }: CreateWorkspacesFormProps) =>
                                                     ref={inputRef}
                                                     disabled={isPending}
                                                     onChange={handleImageChange}
-                                                    />
-                                                    <Button 
-                                                    variant="teritary"
-                                                    size="xs"
-                                                    disabled={isPending}
-                                                    className='w-fit mt-2'
-                                                    onClick={() => inputRef.current?.click()}
-                                                    type="button"
-                                                    > Upload Image
-                                                    </Button>
+                                                    />   
+                                                    {value ? (
+                                                        <Button 
+                                                            variant="destructive"
+                                                            size="xs"
+                                                            disabled={isPending}
+                                                            className='w-fit mt-2'
+                                                            onClick={() => {
+                                                                form.setValue("image", undefined); // Reset image field
+                                                                if (inputRef.current) {
+                                                                    inputRef.current.value = ""; // Clear file input
+                                                                }
+                                                            }}
+                                                            type="button"
+                                                        > 
+                                                            Remove Image 
+                                                        </Button>
+                                                    ) : (
+                                                        <Button 
+                                                        
+                                                            size="xs"
+                                                            disabled={isPending}
+                                                            className='w-fit mt-2'
+                                                            onClick={() => inputRef.current?.click()}
+                                                            type="button"
+                                                        > 
+                                                            Upload Image 
+                                                        </Button>
+                                                    )}
+                                                 
                                                 </div>
                                             </div>
                                         </FormControl>

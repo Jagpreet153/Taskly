@@ -9,10 +9,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { DottedSeperator } from '@/components/ui/dotted-seperator';
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input"; 
-import { useCreateWorkspaces } from '../api/useCreateWorkspace';
+import { useUpdateWorkspaces } from '../api/useUpdateWorkspace';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Image from "next/image";
-import { ImageIcon, Upload } from "lucide-react";
+import { ArrowLeftIcon, ImageIcon, Upload } from "lucide-react";
 import React from 'react';
 import {Workspace} from '../types';
 import { useRouter } from 'next/navigation';
@@ -22,9 +22,9 @@ interface EditWorkspacesFormProps {
     initialValues: Workspace
 }
 
-export const EditWorkspacesForm = ({ onCancel,initialValues }: EditWorkspacesFormProps) => {
+export const EditWorkspaceForm = ({ onCancel,initialValues }: EditWorkspacesFormProps) => {
     const router=useRouter();
-    const { mutate, isPending } = useCreateWorkspaces();
+    const { mutate, isPending } = useUpdateWorkspaces();
 
     const inputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -39,7 +39,7 @@ export const EditWorkspacesForm = ({ onCancel,initialValues }: EditWorkspacesFor
     const onSubmit = (values: z.infer<typeof updateWorkspaceSchema>) => {
         const finalValue={
             ...values,
-            image: values.image instanceof File ?  values.image : undefined
+            image: values.image instanceof File ?  values.image : ""
         }
         mutate({ form: finalValue,
             param: {workspaceId: initialValues.$id} 
@@ -63,11 +63,16 @@ export const EditWorkspacesForm = ({ onCancel,initialValues }: EditWorkspacesFor
 
     return (
         <Card className="w-full max-w-3xl mx-auto bg-white md:my-6 shadow-sm">
-            <CardHeader className="space-y-1.5 p-4 sm:p-6 md:p-8">
-                <CardTitle className="text-xl sm:text-2xl font-semibold">
-                    {initialValues.name}
-                </CardTitle>
-            </CardHeader>
+                <CardHeader className="space-y-1.5 p-4 sm:p-6 md:p-8 flex flex-row items-center gap-4">
+                    <Button size="sm" onClick={onCancel? onCancel: ()=> router.push(`/workspace/${initialValues.$id}`)} variant="secondary">
+                        Back
+                        <ArrowLeftIcon size={4} className='mr-2'/>
+                    </Button>
+
+                    <CardTitle className="text-xl sm:text-2xl font-semibold">
+                        {initialValues.name}
+                    </CardTitle>
+                </CardHeader>
             
             <div className="px-4 sm:px-6 md:px-8">
                 <DottedSeperator />
@@ -137,15 +142,37 @@ export const EditWorkspacesForm = ({ onCancel,initialValues }: EditWorkspacesFor
                                                     disabled={isPending}
                                                     onChange={handleImageChange}
                                                     />
-                                                    <Button 
-                                                    variant="teritary"
-                                                    size="xs"
-                                                    disabled={isPending}
-                                                    className='w-fit mt-2'
-                                                    onClick={() => inputRef.current?.click()}
-                                                    type="button"
-                                                    > Upload Image
-                                                    </Button>
+                                                    {
+                                                        value ? (
+                                                            <Button 
+                                                            variant="destructive"
+                                                            size="xs"
+                                                            disabled={isPending}
+                                                            className='w-fit mt-2'
+                                                            onClick={() => {onChange(null)
+                                                                    { 
+                                                                        if(inputRef.current){
+                                                                            inputRef.current.value = "";
+                                                                    }
+                                                                }
+                                                            }}
+                                                            type="button"
+                                                            > Remove Image
+                                                            </Button>
+
+                                                        ) : (
+                                                            <Button 
+                                                            variant="teritary"
+                                                            size="xs"
+                                                            disabled={isPending}
+                                                            className='w-fit mt-2'
+                                                            onClick={() => inputRef.current?.click()}
+                                                            type="button"
+                                                            > Upload Image
+                                                            </Button>
+                                                        )
+                                                    }
+                                                    
                                                 </div>
                                             </div>
                                         </FormControl>
@@ -176,7 +203,7 @@ export const EditWorkspacesForm = ({ onCancel,initialValues }: EditWorkspacesFor
                                 className="w-full sm:w-auto"
                                 disabled={isPending}
                             >
-                                Create Workspace
+                                Save Changes
                             </Button>
                         </div>
                     </form>

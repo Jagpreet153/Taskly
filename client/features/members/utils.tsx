@@ -1,8 +1,8 @@
-import { Query , type Database} from "node-appwrite"
+import { Databases, Query , type Database} from "node-appwrite"
 import {DATABASE_ID , MEMBERS_ID} from "@/config"
 
     interface GetMeberProps {
-        databases: Database,
+        databases: Databases,
         workspaceId: string,
         userID: string,
     }
