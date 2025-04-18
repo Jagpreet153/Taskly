@@ -34,8 +34,8 @@ export const SignupCard = () => {
     
 return(
         <Card className="h-auto md:w-[800px] border-none shadow-none p-4"> 
-           <CardHeader className="flex items-center justify-center p-7 text-center">
-                    <CardTitle className="p-4"> 
+           <CardHeader className="flex items-center justify-center p-4 text-center">
+                    <CardTitle className="p-6 text-2xl font-semibold text-center"> 
                         Sign Up  
                     </CardTitle>
                     <CardDescription>
@@ -45,7 +45,7 @@ return(
                         </Link>
                     </CardDescription>
            </CardHeader>
-           <div className="px-7">
+           <div className="px-7 py-2">
                 <DottedSeperator/>
             </div>
                 <CardContent className="p-7">

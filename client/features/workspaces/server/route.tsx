@@ -163,7 +163,7 @@ const app = new Hono()
                 return c.json({error: "Unauhorized"}, 401);
             }
 
-            
+
 
             await databases.deleteDocument(
                 DATABASE_ID,
@@ -172,6 +172,40 @@ const app = new Hono()
             );
 
             return c.json({data: { $id: workspaceId }});
+        }
+    )
+
+
+    .post(
+        '/:workspaceId/reset-invite-code',
+        sessionMiddleware,
+        async (c) => {
+            const user = c.get("user");
+            const databases = c.get("databases");
+            const { workspaceId } = c.req.param();
+
+            const member = await getMembers({
+                databases,
+                workspaceId,
+                userID: user.$id,
+            });
+
+            if(!member || member.role !== MemberRole.ADMIN){
+                return c.json({error: "Unauhorized"}, 401);
+            }
+
+            
+
+            const workspace=await databases.updateDocument(
+                DATABASE_ID,
+                WORKSPACES_ID,
+                workspaceId,
+                {
+                    inviteCode: generateInviteCode(6),
+                }
+            );
+
+            return c.json({data: workspace});
         }
     )
 

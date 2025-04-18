@@ -1,6 +1,8 @@
+
+
 "use client"
 import { z } from 'zod';
-import { useRef } from 'react';
+import { useRef,useState,useEffect } from 'react';
 import { updateWorkspaceSchema } from '../schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -12,13 +14,14 @@ import { Input } from "@/components/ui/input";
 import { useUpdateWorkspaces } from '../api/useUpdateWorkspace';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Image from "next/image";
-import { ArrowLeftIcon, ImageIcon, Upload } from "lucide-react";
+import { ArrowLeftIcon, CopyIcon, ImageIcon, Upload } from "lucide-react";
 import React from 'react';
 import {Workspace} from '../types';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useConfirm } from '@/app/hooks/useConfirm';
 import { useDeleteWorkspaces } from '../api/useDeleteWorkspace';
+import { toast } from 'sonner';
 interface EditWorkspacesFormProps {
     onCancel?: () => void;
     initialValues: Workspace
@@ -42,9 +45,11 @@ export const EditWorkspaceForm = ({ onCancel,initialValues }: EditWorkspacesForm
         resolver: zodResolver(updateWorkspaceSchema),
         defaultValues: {
             ...initialValues,
-            image: initialValues.imageUrl? initialValues.imageUrl : ""
+            image: initialValues.imageUrl || ""
         }
     });
+
+    console.log(initialValues);
 
     const handleDelete = async () => {
         const ok = await confirmDelete();
@@ -65,6 +70,7 @@ export const EditWorkspaceForm = ({ onCancel,initialValues }: EditWorkspacesForm
             ...values,
             image: values.image instanceof File ?  values.image : ""
         }
+
         mutate({ form: finalValue,
             param: {workspaceId: initialValues.$id} 
          },{
@@ -82,8 +88,14 @@ export const EditWorkspaceForm = ({ onCancel,initialValues }: EditWorkspacesForm
         if(file){
             form.setValue("image", file);
         }
-    }
+    };
+    
+    const fullInviteLink = typeof window !== 'undefined' ? `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}` : '';
 
+    const handleCopyInviteLink = () => {
+        navigator.clipboard.writeText(fullInviteLink)
+        .then(()=>toast.success("Invite link copied to clipboard"))
+    }
     return (
         <div className='flex flex-col gap-4'>
             <DeleteDialog />
@@ -130,7 +142,7 @@ export const EditWorkspaceForm = ({ onCancel,initialValues }: EditWorkspacesForm
                                 <FormField
                                     control={form.control}
                                     name="image"
-                                    render={({field: { value, onChange, ...field }}) => (
+                                    render={({field: { value, onChange }}) => (
                                         <FormItem className="space-y-2">
                                             <FormLabel className="text-sm font-medium">
                                             
@@ -233,6 +245,32 @@ export const EditWorkspaceForm = ({ onCancel,initialValues }: EditWorkspacesForm
                             </div>
                         </form>
                     </Form>
+                </CardContent>
+            </Card>
+
+            <Card className='w-full max-w-3xl mx-auto bg-white md:my-6 shadow-sm'>
+                <CardContent className='p-4 sm:p-6 md:p-8 space-y-6'>
+                    <div className='flex flex-col'>
+                        <h3 className='font-bold'>Invite Members</h3>
+                        <p className='text-sm text-muted-foreground'>
+                            Use the link below to invite members to your workspace
+                        </p>
+                        <div className='mt-4'>
+                            <div className='flex items-center gap-x-2'>
+                                    <Input disabled value={fullInviteLink} />
+                                    <Button 
+                                        variant='secondary' 
+                                        className='size-12' 
+                                        onClick={handleCopyInviteLink}>
+                                        <CopyIcon className='size-5'/>
+                                    </Button>
+                            </div>
+
+                        </div>
+                        <Button className='mt-16 w-fit ml-auto' size="sm" variant='destructive' type='button' disabled={isPending || isDeletingWorkspace} onClick={handleDelete}>
+                            Reset Invite Code
+                        </Button>
+                    </div>
                 </CardContent>
             </Card>
 
